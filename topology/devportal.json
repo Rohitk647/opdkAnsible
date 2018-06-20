@@ -1,0 +1,38 @@
+{
+  "planet": "UAT-1DC-5N",
+  "regions": [{
+    "id": 1,
+    "name": "dc-1",
+    "subnets": [
+      {
+        "name": "core",
+        "tier": "core",
+        "nodes": {
+          "id": 1,
+          "hostname": "DC1DP1",
+          "ip": "34.239.126.27",
+          "dns_or_ip": "172.31.59.191",
+          "components": [
+            {
+              "comp": "PG"
+            },
+            {
+              "comp": "DP"
+            }
+          ]
+        }
+      }
+      ],
+      "tiers": [{
+        "name": "core"
+      }
+      ]
+    }
+    ],
+    "ssh": {
+      "bastion": {
+        "present": false
+      },
+      "ssh_password": false
+    }
+  }
