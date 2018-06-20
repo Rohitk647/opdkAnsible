@@ -1,0 +1,8 @@
+*.retry
+inventory/*
+apigee-repo/*
+reports/*
+!*/.gitkeep
+vault*
+tls*
+.idea/*

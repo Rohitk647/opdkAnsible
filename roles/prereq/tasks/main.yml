@@ -1,0 +1,112 @@
+---
+- name: Install required packages
+  become: yes
+  yum: 
+    pkg: "{{ item }}" 
+    state: installed
+  with_items:
+    - wget
+    - curl
+    - telnet
+    - nc  
+    - nmap  
+    - java-1.8.0-openjdk-devel
+    - yum-utils
+    - yum-plugin-priorities
+    
+- name: Set JAVA_HOME for the installation
+  become: yes
+  lineinfile: 
+    dest: /etc/profile 
+    regexp: "^(export JAVA_HOME=)" 
+    state: present 
+    line: "export JAVA_HOME=/usr/lib/jvm/java-openjdk"
+
+- name: Source /etc/profile  
+  shell: source /etc/profile
+
+- name: Disable SELINUX
+  become: yes
+  command: /usr/sbin/setenforce 0
+  ignore_errors: yes
+  
+- name: Create the apigee group
+  become: yes
+  group:
+    name: apigee
+    state: present
+
+- name: Create the apigee user
+  become: yes
+  user:
+    name: apigee
+    group: apigee    
+
+- name: Ensure that OPDK staging folder is in place
+  become: yes
+  file:
+    path: '/opt/apigee'
+    state: directory
+    group: 'apigee'
+    owner: 'apigee'
+    recurse: yes
+
+- name: Create Apigee's tmp folder  
+  become: yes
+  file:
+    path: '/tmp/apigee'
+    state: directory
+    group: 'apigee'
+    owner: 'apigee'
+    recurse: yes
+
+- name: Copy response file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee  
+
+- name: Copy response provision file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_provision.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee
+  when: inventory_hostname in groups['ms'] or inventory_hostname in groups['msldap']
+
+- name: Copy license file
+  become: yes
+  copy:
+    src: "{{ license_path }}"
+    dest: "{{ opdk_license_target_file_path }}"
+    owner: apigee
+    group: apigee 
+
+- include_tasks: bootstrap.yml
+
+- name: Install apigee-setup utility
+  become: yes
+  command: bash /opt/apigee/apigee-service/bin/apigee-service apigee-setup install
+  when: cmd is not defined and cmd != "update"
+
+- name: Install apigee provision
+  become: yes
+  command: /opt/apigee/apigee-service/bin/apigee-service apigee-provision install
+  when:
+    - inventory_hostname in groups['ms'] or inventory_hostname in groups['msldap']
+    - cmd is not defined and cmd != "update"
+
+- name: Update apigee-setup utility
+  become: yes
+  command: bash /opt/apigee/apigee-service/bin/apigee-service apigee-setup update
+  when: cmd is defined and cmd == "update"
+
+- name: Update apigee provision
+  become: yes
+  command: /opt/apigee/apigee-service/bin/apigee-service apigee-provision update
+  when:
+    - inventory_hostname in groups['ms'] or inventory_hostname in groups['msldap']
+    - cmd is defined and cmd == "update"

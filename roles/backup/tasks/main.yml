@@ -1,0 +1,4 @@
+---
+- name: Backup of all Edge Components
+  become: yes
+  command: /opt/apigee/apigee-service/bin/apigee-all backup

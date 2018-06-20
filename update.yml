@@ -1,0 +1,172 @@
+---
+# Backup of all Components
+- hosts: planet
+  tasks:
+  - name: Backup on all nodes
+    include_role:
+      name: backup
+    tags: backup
+
+# Upload response filesupdate
+- hosts: localhost
+  tasks:
+  - name: Update the response files
+    include_role:
+      name: response_files
+
+# Run prereq stepsupdate
+- hosts: planet
+  tasks:
+  - name: Upgrade prereqs
+    include_role:
+      name: prereq
+    vars:
+      cmd: update
+
+# Third party components
+
+# Update Zookeeper
+- hosts: zk
+  serial: 1
+  tasks:
+  - name: Update Zookeeper
+    include_role:
+      name: setup
+    vars: 
+      profile: z
+      cmd: update     
+
+# Update Cassandra
+- hosts: c
+  serial: 1
+  tasks:
+  - name: Update Cassandra
+    include_role:
+      name: setup
+    vars: 
+      profile: c
+      cmd: update
+
+# Update Zookeeper and Cassandra
+- hosts: ds
+  serial: 1
+  tasks:
+  - name: Update Cassandra and Zookeeper
+    include_role:
+      name: setup
+    vars: 
+      profile: ds
+      cmd: update
+
+# Update QPIDD
+- hosts: qpid
+  serial: 1
+  tasks:
+  - name: Update Qpid
+    include_role:
+      name: setup
+    vars: 
+      profile: qs
+      cmd: update
+
+# Update OpenLDAP
+- hosts: ldap:msldap
+  serial: 1
+  tasks:
+  - name: Update LDAP
+    include_role:
+      name: setup
+    vars: 
+      profile: ld
+      cmd: update
+
+## Edge components    
+
+# Update Qpid Server
+- hosts: qpid
+  serial: 1
+  tasks:
+  - name: Update Edge components on Qpid nodes
+    include_role:
+      name: setup
+    vars:
+      profile: edge
+      cmd: update
+    tags:
+      - edgeqpid
+#
+## Update Postgres Server
+#- hosts: pg
+#  serial: 1
+#  tasks:
+#  - include_role:
+#      name: setup
+#    vars:
+#      profile: edge
+#      cmd: update
+
+# Update Management Server
+- hosts: ms:msldap
+  serial: 1
+  tasks:
+  - name: Update edge components on MS
+    include_role:
+      name: setup
+    vars:
+      profile: edge
+      cmd: update
+
+# Update Message Processor
+- hosts: mp
+  serial: 1
+  tasks:
+  - name: Update edge components on MP
+    include_role:
+      name: setup
+    vars: 
+      profile: edge
+      cmd: update
+
+# Update Router and Message Processor
+- hosts: rmp
+  serial: 1
+  tasks:
+  - name: Update edge components on RMP
+    include_role:
+      name: setup
+    vars: 
+      profile: edge
+      cmd: update 
+
+# Update Router
+- hosts: r
+  serial: 1
+  tasks:
+  - name: Update edge components on Router
+    include_role:
+      name: setup
+    vars: 
+      profile: edge
+      cmd: update    
+
+# Update UI
+- hosts: ui
+  serial: 1
+  tasks:
+  - name: Update edgeUI
+    include_role:
+      name: setup
+    vars: 
+      profile: ui
+      cmd: update
+
+# Update Postgresql
+#- hosts: pg
+#  serial: 1
+#  tasks:
+#  - include_role:
+#      name: pg_upgrade
+
+
+#- name: Postgres Upgrade
+- import_playbook: pg_upgrade.yml

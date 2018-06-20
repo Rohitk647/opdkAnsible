@@ -1,0 +1,78 @@
+---
+- hosts: ~(.*)pgmaster
+  become: yes
+  tasks:
+  - name: Stop Postgres server on PG Master
+    command: bash /opt/apigee/apigee-service/bin/apigee-service edge-postgres-server stop
+
+- hosts: ~(.*)pgstandby
+  become: yes
+  tasks:
+  - name: Stop Postgres server and Postgresql on PG Standby
+    command: "{{ item }}"
+    with_items:
+      - /opt/apigee/apigee-service/bin/apigee-service edge-postgres-server stop
+      - /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql stop
+
+- hosts: qpid
+  become: yes
+  tasks:
+  - name: Stop Qpid Servers
+    command: /opt/apigee/apigee-service/bin/apigee-service edge-qpid-server stop
+
+- hosts: ~(.*)pgNewStandby
+  become: yes
+  tasks:
+  - name: Stop Postgres server and Postgresql on New PG Standby
+    command: "{{ item }}"
+    with_items:
+      - /opt/apigee/apigee-service/bin/apigee-service edge-postgres-server stop
+      - /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql stop
+
+- hosts: ~(.*)pgmaster
+  become: yes
+  tasks:
+  - name: Update Postgresql component on PG Master
+    command: bash /opt/apigee/apigee-setup/bin/update.sh -c ps -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg
+
+- hosts: ~(.*)pgmaster
+  become: yes
+  tasks:
+  - name: Update Postgres Database on PG Master
+    command: /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql db_upgrade
+
+- hosts: ~(.*)pgstandby
+  become: yes
+  tasks:
+  - name: Update Postgresql component on PG Standby
+    command: bash /opt/apigee/apigee-setup/bin/update.sh -c ps -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg
+
+- hosts: pg
+  become: yes
+  tasks:
+  - name: Start Postgres Servers on the PG nodes
+    command: /opt/apigee/apigee-service/bin/apigee-service edge-postgres-server start
+
+- hosts: qpid
+  become: yes
+  tasks:
+  - name: Start Qpid Servers
+    command: /opt/apigee/apigee-service/bin/apigee-service edge-qpid-server start
+
+- hosts: ~(.*)pgstandby
+  become: yes
+  tasks:
+  - name: Empty the pgdata on standby node
+    shell: rm -rf /opt/apigee/data/apigee-postgresql/pgdata/*
+
+- hosts: ~(.*)pgstandby
+  become: yes
+  tasks:
+  - name: Setting up replication on standby node
+    command: /opt/apigee/apigee-service/bin/apigee-service apigee-postgresql setup-replication-on-standby -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg
+
+- hosts: pg
+  become: yes
+  tasks:
+  - name: Update Edge Components on PG nodes
+    command: bash /opt/apigee/apigee-setup/bin/update.sh -c edge -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg

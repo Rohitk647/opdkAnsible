@@ -1,0 +1,136 @@
+{
+	"planet": "UAT-1DC-5N",
+	"regions": [{
+			"id": 1,
+			"name": "dc-1",
+			"subnets": [{
+          "name": "core",
+          "tier": "core",
+          "nodes": [
+            {
+            "id": 1,
+            "hostname": "DC1MS",
+            "ip": "10.5.0.1",
+            "dns_or_ip": "10.5.0.1",
+            "components": [{
+                "comp": "CS"
+              },
+              {
+                "comp": "ZK"
+              },{
+                "comp": "UI"
+              },
+              {
+                "comp": "MS"
+              },
+              {
+                "comp": "OL"
+              }
+            ]
+          },
+            {
+            "id": 2,
+            "hostname": "DC1DS2",
+              "ip": "10.5.0.2",
+              "dns_or_ip": "10.5.0.2",
+              "components": [{
+                "comp": "CS"
+              },
+              {
+                "comp": "ZK"
+              },
+              {
+                "comp": "R"
+              },
+              {
+                "comp": "MP"
+              }
+            ]
+          },
+            {
+            "id": 3,
+            "hostname": "DC1DS3",
+              "ip": "10.5.0.3",
+              "dns_or_ip": "10.5.0.3",
+              "components": [{
+                "comp": "CS"
+              },
+              {
+                "comp": "ZK"
+              },
+              {
+                "comp": "R"
+              },
+              {
+                "comp": "MP"
+              }
+            ]
+          },
+            {
+            "id": 4,
+            "hostname": "DC1RAX1",
+              "ip": "10.5.0.4",
+              "dns_or_ip": "10.5.0.4",
+            "components": [{
+                "comp": "PS"
+              },
+              {
+                "comp": "QS"
+              },
+              {
+                "comp": "QD"
+              },
+              {
+                "comp": "PGm"
+              }
+            ]
+          },
+            {
+              "id": 5,
+              "hostname": "DC1RAX2",
+              "ip": "10.5.0.5",
+              "dns_or_ip": "10.5.0.5",
+              "components": [{
+                "comp": "PS"
+              },
+                {
+                  "comp": "QS"
+                },
+                {
+                  "comp": "QD"
+                },
+                {
+                  "comp": "PGs"
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "hostname": "DC1DP1",
+              "ip": "172.31.59.191",
+              "dns_or_ip": "34.239.126.27",
+              "components": [
+                {
+                "comp": "PG"
+                },
+                {
+                  "comp": "DP"
+                }
+              ]
+            }
+          ]
+        }
+			],
+			"tiers": [{
+					"name": "core"
+        }
+			]
+		}
+	],
+	"ssh": {
+		"bastion": {
+			"present": false
+		},
+		"ssh_password": false
+	}
+}
