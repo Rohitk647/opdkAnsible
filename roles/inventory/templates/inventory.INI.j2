@@ -126,7 +126,7 @@ localhost ansible_connection=local
 {% endfor %}
 
 [{{ r.name }}-dp]
-# Listing of all the UI nodes in {{ r.name }}
+# Listing of all the DP nodes in {{ r.name }}
 {% for n in iteratee if "DP" in in n.components and "PG" in n.components %}
 {{ n.name }}
 {% endfor %}
@@ -235,5 +235,3 @@ ansible_ssh_pass="{{ ssh_pwd }}"
 ansible_ssh_common_args='-o ProxyCommand="ssh -i {{ bastion_private_key_file }} -W %h:%p -q {{ bastion_user }}@{{ bastion_host }}"'
 {% endraw %}
 {% endif %}
-
-[defaults]

@@ -1,5 +1,5 @@
 {
-  "resourcePermission" : [ {  
+  "resourcePermission"  : [ {
     "path" : "/",
     "permissions" : [ "get" ]
   }, {
