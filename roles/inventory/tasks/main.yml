@@ -1,7 +1,13 @@
 ---
-- name: Generate template
+- name: Generate edge inventory
   delegate_to: localhost
   template:
    src: inventory.INI.j2
    dest: "{{ playbook_dir }}/inventory/inventory_{{ json_schema.planet }}.INI"
   
+- name: Generate devportal inventory
+  delegate_to: localhost
+  template:
+   src: inventory_devportal.INI.j2
+   dest: "{{ playbook_dir }}/inventory/devportal_inventory_{{ json_schema.planet }}.INI"
+  tags: devportal

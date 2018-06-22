@@ -1,0 +1,33 @@
+# Planet {{ json_schema.planet }}
+{% set servers={} %}
+{% set regions=[] %}
+{% set ips=[] %}
+{% set ldap_count=[0] %}
+localhost ansible_connection=local
+
+[planet]
+{% for region in json_schema.regions %}
+{% set x=regions.append({"name": region.name, "nodes": []}) %}
+{% set region_index=loop.index - 1 %}
+# {{ region.name }}
+{% set node_count = [1] %}
+{% for sn in region.subnets %}
+{% for n in sn.nodes %}
+{% if n.ip not in ips %}
+{% set node_name=region.name ~ '-n' ~ node_count.0 %}
+{{ node_name }} ansible_host={{ n.ip }} env_ref={{ node_name.upper() | replace('-','') }} region={{ region.name }} dns_or_ip={{ n.dns_or_ip }}
+{% for sc in regions if sc.name==region.name %}
+{% set x=sc.nodes.append({"name": node_name, "ip": n.ip, "components": []}) %}
+{% endfor %}
+{% set x=ips.append(n.ip) %}
+{% set x=node_count.append(node_count.pop() + 1) %}
+{% endif %}
+{% for c in n.components %}
+{% for node in regions[region_index].nodes if node.ip==n.ip and c.comp not in n.components %}
+{% set x=node.components.append(c.comp) %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% set x=servers.__setitem__("regions", regions) %}

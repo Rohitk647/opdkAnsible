@@ -1,0 +1,11 @@
+#############################################################################
+# @region   : {{ region.upper() }}
+# @date     : {{ ansible_date_time['iso8601_micro'] }}
+# @author   : {{ ansible_user_id }}
+# @inventory: {{ inventory_file }}
+#############################################################################
+
+HOSTIP="$(hostname -i)"
+MP_POD="gateway"
+REGION="{{ region }}"
+PG_PWD="{{ pg_pwd }}"

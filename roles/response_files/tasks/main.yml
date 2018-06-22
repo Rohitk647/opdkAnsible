@@ -28,3 +28,26 @@
     dest: "{{ response_path }}/response_{{ planet }}_{{ item }}_provision.cfg"
   with_items:
     - "{{ regions.split(',') }}"
+    
+- name: dev portal response file
+  delegate_to: localhost
+  vars:
+    region: "{{ item }}"
+  template:
+    src: response_devportal.cfg.j2
+    dest: "{{ response_path }}/response_devportal_{{ planet }}_{{ item }}.cfg"
+  with_items:
+    - "{{ regions.split(',') }}"
+  tags: devportal
+  
+- name: dev portal postgres response file
+  delegate_to: localhost
+  vars:
+    region: "{{ item }}"
+  template:
+    src: response_devportal.cfg.j2
+    dest: "{{ response_path }}/response_devportal_postgres_{{ planet }}_{{ item }}.cfg"
+  with_items:
+    - "{{ regions.split(',') }}"
+  tags: devportal
+    

@@ -1,0 +1,39 @@
+#############################################################################
+# @region   : {{ region.upper() }}
+# @date     : {{ ansible_date_time['iso8601_micro'] }}
+# @author   : {{ ansible_user_id }}
+# @inventory: {{ inventory_file }}
+#############################################################################
+
+HOSTIP="$(hostname -i)"
+
+PG_NAME="devportal"
+PG_USER="{{ pg_user }}"
+PG_PWD="{{ pg_pwd }}"
+PG_HOST="$(hostname -i)" 
+DRUPAL_PG_USER="{{ drupal_pg_user }}"
+DRUPAL_PG_PASS="{{ drupal_pg_pass }}"
+DEFAULT_DB="{{ default_db }}"
+DEVPORTAL_ADMIN_FIRSTNAME="{{ devportal_admin_firstname }}"
+DEVPORTAL_ADMIN_LASTNAME="{{ devportal_admin_lastname }}"
+DEVPORTAL_ADMIN_USERNAME="{{ devprtal_admin_username }}"
+DEVPORTAL_ADMIN_PWD="{{ devportal_admin_pwd }}"
+DEVPORTAL_ADMIN_EMAIL="{{ devportal_admin_email }}"
+EDGE_ORG="{{ edge_org }}" 
+MGMT_URL="{{ mgmt_url }}"
+DEVADMIN_USER="{{ devadmin_user }}"
+DEVADMIN_PWD="{{ devadmin_pwd }}"
+PHP_FPM_PORT="{{ php_fpm_port }}"
+
+SKIP_SMTP="{{ opdk_smtp_skip }}"
+{% if opdk_smtp_skip | trim == 'n' %}
+SMTPHOST="{{ opdk_smtp_host }}"
+SMTPPORT="{{ opdk_smtp_port }}"
+SMTPUSER="{{ opdk_smtp_user }}"
+SMTPPASSWORD="{{ opdk_smtp_password }}"
+SMTPSSL="{{ opdk_smtp_ssl }}"
+{% endif %}
+SMTPMAILFROM="{{ opdk_smtp_mail_from }}"
+BIND_ON_ALL_INTERFACES="{{ opdk_bind_on_all_interfaces }}"
+
+ENABLE_SYSTEM_CHECK="{{ enable_system_check }}"
