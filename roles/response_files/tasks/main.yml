@@ -31,13 +31,9 @@
     
 - name: dev portal response file
   delegate_to: localhost
-  vars:
-    region: "{{ item }}"
   template:
     src: response_devportal.cfg.j2
-    dest: "{{ response_path }}/response_devportal_{{ planet }}_{{ item }}.cfg"
-  with_items:
-    - "{{ regions.split(',') }}"
+    dest: "{{ playbook_dir }}/reports/response_files/response_devportal.cfg"
   tags: devportal
   
 - name: dev portal postgres response file
@@ -45,9 +41,8 @@
   vars:
     region: "{{ item }}"
   template:
-    src: response_devportal.cfg.j2
-    dest: "{{ response_path }}/response_devportal_postgres_{{ planet }}_{{ item }}.cfg"
-  with_items:
-    - "{{ regions.split(',') }}"
+    src: response_devportal_postgres.cfg.j2
+    dest: "{{ playbook_dir }}/reports/response_files/response_devportal_postgres.cfg"
   tags: devportal
-    
+  with_items:
+    - dc-1
