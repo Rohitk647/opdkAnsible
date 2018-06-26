@@ -52,7 +52,7 @@
     region: "{{ item }}"
   template:
     src: response_devportal_postgres.cfg.j2
-    dest: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ item }}devportal_postgres.cfg"
+    dest: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ item }}_devportal_postgres.cfg"
   tags: devportal
   with_items:
     - "{{ regions.split(',') }}"
