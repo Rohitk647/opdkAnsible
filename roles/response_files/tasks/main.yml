@@ -28,13 +28,23 @@
     dest: "{{ response_path }}/response_{{ planet }}_{{ item }}_provision.cfg"
   with_items:
     - "{{ regions.split(',') }}"
+
+- name: Creates response dir if it doesn't exist
+  file:
+    path: "{{ playbook_dir }}/reports/{{ planet }}/response_files"
+    state: directory
+  tags: devportal
     
 - name: dev portal response file
   delegate_to: localhost
+  vars:
+    region: "{{ item }}"
   template:
     src: response_devportal.cfg.j2
-    dest: "{{ playbook_dir }}/reports/response_files/response_devportal.cfg"
+    dest: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ item }}_devportal.cfg"
   tags: devportal
+  with_items:
+    - "{{ regions.split(',') }}"
   
 - name: dev portal postgres response file
   delegate_to: localhost
@@ -42,7 +52,7 @@
     region: "{{ item }}"
   template:
     src: response_devportal_postgres.cfg.j2
-    dest: "{{ playbook_dir }}/reports/response_files/response_devportal_postgres.cfg"
+    dest: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ item }}devportal_postgres.cfg"
   tags: devportal
   with_items:
-    - dc-1
+    - "{{ regions.split(',') }}"

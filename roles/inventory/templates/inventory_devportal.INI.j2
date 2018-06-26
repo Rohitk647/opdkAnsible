@@ -29,3 +29,7 @@ localhost ansible_connection=local
 {% endfor %}
 {% endfor %}
 {% set x=servers.__setitem__("regions", regions) %}
+
+[all:vars]
+planet="{{ json_schema.planet }}"
+regions={{ regions | map(attribute='name') | join(',') }}
