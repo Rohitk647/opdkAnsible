@@ -1,0 +1,51 @@
+---
+- block:
+  - name: Download bootstrap
+    become: yes
+    get_url:
+      url: "{{ apigee_mirror_protocol }}://{{ apigee_mirror_username }}:{{ apigee_mirror_pwd }}@{{ apigee_mirror_url }}:{{ apigee_mirror_port }}/bootstrap_{{ edge_version }}.sh"
+      dest: /tmp/apigee/bootstrap_{{ edge_version }}.sh
+      owner: apigee
+      group: apigee
+      mode: 0755
+
+  - name: Bootstrap Apigee
+    become: yes
+    command: bash /tmp/apigee/bootstrap_{{ edge_version }}.sh apigeerepohost={{ apigee_mirror_url }}:{{ apigee_mirror_port }} apigeeuser={{ apigee_mirror_username }} apigeepassword={{ apigee_mirror_pwd }} apigeeprotocol={{ apigee_mirror_protocol }}://
+
+  when: apigee_mirror_type is defined and apigee_mirror_type | trim | lower == 'nginx'
+
+- block:
+  - name: Copy bootstrap tar file
+    become: yes
+    copy:
+      src: "{{ playbook_dir }}/apigee-repo/apigee-{{ edge_version }}.tar.gz"
+      dest: /tmp/apigee-{{ edge_version }}.tar.gz
+      owner: apigee
+      group: apigee
+
+  - name: Untar the bootstrap tar fie
+    become: yes
+    command: tar -xzf /tmp/apigee-{{edge_version}}.tar.gz --directory /tmp/
+
+  - name: Run the Bootstrap script
+    become: yes
+    command: bash /tmp/repos/bootstrap_{{ edge_version }}.sh apigeeprotocol="file://" apigeerepobasepath=/tmp/repos/
+
+  when: apigee_mirror_type is defined and apigee_mirror_type | trim | lower == 'tar'
+
+- block:
+  - name: Download bootstrap
+    become: yes
+    get_url:
+      url: https://software.apigee.com/bootstrap_{{ edge_version }}.sh
+      dest: /tmp/apigee/bootstrap_{{ edge_version }}.sh
+      owner: apigee
+      group: apigee
+      mode: 0755
+
+  - name: Bootstrap Apigee
+    become: yes
+    command: bash /tmp/apigee/bootstrap_{{ edge_version }}.sh apigeeuser={{ apigee_user }} apigeepassword={{ apigee_pwd }}
+
+  when: apigee_mirror_type is defined and apigee_mirror_type | trim | lower == 'none'

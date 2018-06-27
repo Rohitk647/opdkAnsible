@@ -1,0 +1,8 @@
+---
+- name: Setup postgres
+  become: yes
+  command: bash /opt/apigee/apigee-setup/bin/setup.sh -p pdb -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_.cfg
+  
+- name: Setup devportal
+  become: yes
+  command: bash /opt/apigee/apigee-setup/bin/setup.sh -p dp -f /tmp/apigee/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}.cfg

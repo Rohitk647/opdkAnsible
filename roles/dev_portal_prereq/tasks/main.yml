@@ -1,0 +1,97 @@
+---
+- name: Install required packages
+  become: yes
+  yum: 
+    pkg: "{{ item }}" 
+    state: installed
+  with_items:
+    - wget
+    - curl
+    - telnet
+    - nc  
+    - nmap  
+    - java-1.8.0-openjdk-devel
+    - yum-utils
+
+- name: Remove PHP packages
+  become: yes
+  yum: 
+    pkg: "{{ item }}" 
+    state: absent
+  with_items:
+    - php
+    - php-cli
+    - php-gd
+    - php-mbstring  
+    - php-mysql  
+    - php-pdo
+    - php-pear
+    - php-pecl-apc
+    - php-process
+    - php-xml
+    
+- name: Set JAVA_HOME for the installation
+  become: yes
+  lineinfile: 
+    dest: /etc/profile 
+    regexp: "^(export JAVA_HOME=)" 
+    state: present 
+    line: "export JAVA_HOME=/usr/lib/jvm/java-openjdk"
+
+- name: Source /etc/profile  
+  shell: source /etc/profile
+
+- name: Disable SELINUX
+  become: yes
+  command: /usr/sbin/setenforce 0
+  ignore_errors: yes
+  
+- name: Ensure that OPDK staging folder is in place
+  become: yes
+  file:
+    path: '/opt/apigee'
+    state: directory
+    group: 'apigee'
+    owner: 'apigee'
+    recurse: yes
+
+- name: Create Apigee's tmp folder  
+  become: yes
+  file:
+    path: '/tmp/apigee'
+    state: directory
+    group: 'apigee'
+    owner: 'apigee'
+    recurse: yes
+
+- name: Copy response file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_devportal.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee  
+
+- name: Copy postgres response file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_devportal_postgres.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee
+
+- name: Copy license file
+  become: yes
+  copy:
+    src: "{{ license_path }}"
+    dest: "{{ opdk_license_target_file_path }}"
+    owner: apigee
+    group: apigee 
+
+- include_tasks: bootstrap.yml
+
+- name: Install apigee-setup utility
+  become: yes
+  command: bash /opt/apigee/apigee-service/bin/apigee-service apigee-setup install
+  
+
