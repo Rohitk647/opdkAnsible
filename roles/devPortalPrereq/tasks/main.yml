@@ -12,6 +12,23 @@
     - nmap  
     - java-1.8.0-openjdk-devel
     - yum-utils
+
+- name: Remove PHP packages
+  become: yes
+  yum: 
+    pkg: "{{ item }}" 
+    state: absent
+  with_items:
+    - php
+    - php-cli
+    - php-gd
+    - php-mbstring  
+    - php-mysql  
+    - php-pdo
+    - php-pear
+    - php-pecl-apc
+    - php-process
+    - php-xml
     
 - name: Set JAVA_HOME for the installation
   become: yes
@@ -29,18 +46,6 @@
   command: /usr/sbin/setenforce 0
   ignore_errors: yes
   
-- name: Create the apigee group
-  become: yes
-  group:
-    name: apigee
-    state: present
-
-- name: Create the apigee user
-  become: yes
-  user:
-    name: apigee
-    group: apigee    
-
 - name: Ensure that OPDK staging folder is in place
   become: yes
   file:
