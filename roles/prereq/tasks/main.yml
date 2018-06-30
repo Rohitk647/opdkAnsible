@@ -12,7 +12,6 @@
     - nmap  
     - java-1.8.0-openjdk-devel
     - yum-utils
-    - yum-plugin-priorities
     
 - name: Set JAVA_HOME for the installation
   become: yes
@@ -67,6 +66,7 @@
     dest: /tmp/apigee/
     owner: apigee
     group: apigee  
+  when: cmd is not defined or cmd != "devportal"
 
 - name: Copy response provision file
   become: yes
@@ -75,7 +75,26 @@
     dest: /tmp/apigee/
     owner: apigee
     group: apigee
-  when: inventory_hostname in groups['ms'] or inventory_hostname in groups['msldap']
+  when: (cmd is not defined or cmd != "devportal") and (inventory_hostname in groups['ms'] or inventory_hostname in groups['msldap'])
+
+- name: Copy devportal response file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_devportal.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee
+  when: cmd == "devportal"
+
+- name: Copy devportal postgres file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/reports/{{ planet }}/response_files/response_{{ planet }}_{{ hostvars[inventory_hostname]['region'] }}_devportal_postgres.cfg"
+    dest: /tmp/apigee/
+    owner: apigee
+    group: apigee
+  when: cmd == "devportal"
+
 
 - name: Copy license file
   become: yes
@@ -90,7 +109,7 @@
 - name: Install apigee-setup utility
   become: yes
   command: bash /opt/apigee/apigee-service/bin/apigee-service apigee-setup install
-  when: cmd is not defined and cmd != "update"
+  when: (cmd is not defined and cmd != "update") or (cmd == "devportal")
 
 - name: Install apigee provision
   become: yes
