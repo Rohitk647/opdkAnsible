@@ -73,22 +73,22 @@ onboard_vhost_alias*** | api.forest.com  | virtualhost alias for onboarding. If 
 vhost_port | 9001 | Port for Virtual host during Org Setup. Change if required, if not needed leave the original value.
 vhost_name | default | Name of the Virtual host. Change if required, if not needed leave the original value.
 vhost_ssl | n | SSL for Virtual host. If not required, leave the default value.
-pg_name | devportal |Specify the name of portal database in postgres.
-pg_user | apigee | postgres username.
-pg_pwd | postgres | postgres password.
-drupal_pg_user | drupaladmin | drupal admin.
-drupal_pg_pass | portalsecret |drupal admin password.
-default_db | postgres.
-devportal_admin_firstname | firstname | portal admin firstname.
-devportal_admin_lastname | lastname | portal admin lastname.
-devportal_admin_username | username | portal admin username.
-devportal_admin_pwd | password | password of portal admin.
-devportal_admin_email | user@example.com | email of portal admin to login into dev portal.
-edge_org | organization | org name to be connected to. 
-mgmt_url | management API | management URL of org.
-devadmin_user | username | org admin username to connect to org.
-devadmin_pwd | password | org admin password.
-php_fpm_port | 8888. 
+pg_name* | devportal |Specify the name of portal database in postgres.
+pg_user*| apigee | postgres username.
+pg_pwd* | postgres | postgres password.
+drupal_pg_user* | drupaladmin | drupal admin.
+drupal_pg_pass* | portalsecret |drupal admin password.
+default_db* | postgres.
+devportal_admin_firstname* | firstname | portal admin firstname.
+devportal_admin_lastname* | lastname | portal admin lastname.
+devportal_admin_username* | username | portal admin username.
+devportal_admin_pwd* | password | password of portal admin.
+devportal_admin_email* | user@example.com | email of portal admin to login into dev portal.
+edge_org* | organization | org name to be connected to. 
+mgmt_url* | management API | management URL of org.
+devadmin_user* | username | org admin username to connect to org.
+devadmin_pwd* | password | org admin password.
+php_fpm_port* | 8888. 
 keystore_jar | /tmp/keystore.jar | Location of the JAR file on the target server.
 keystore_name | keystore | Name of the Keystore to be displayed in the Env Configuration.
 keystore_alias | keystore | Name of the Keystore alias to be displayed in the Env Configuration.
@@ -100,6 +100,7 @@ apigee_mirror_url | mirror.example.com | If you are using the nginx method as th
 apigee_mirror_port | 3939 | If you are using the nginx method as the mirror type provide the port for the repo. If not, leave the default value.
 apigee_mirror_username | admin | If you are using the nginx method as the mirror type provide the user for the repo. If not, leave the default value.
 apigee_mirror_pwd | admin | If you are using the nginx method as the mirror type provide the password for the repo. If not, leave the default value.
+
 \* Required.
 
 ** Required if _opdk_smtp_skip=n_.
