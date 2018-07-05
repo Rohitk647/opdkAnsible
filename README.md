@@ -121,6 +121,23 @@ topolgy_src* | examples/topology.json | Path to topology json file.
 
 Find the files under:
   - _inventory/inventory\_PLANET.INI_
+  
+  ### Generate Anisble inventory for Dev Portal <a name="inventory"/>
+
+Create an inventory file used by all Ansible playbooks and operation tasks:
+```
+$ ansible-playbook -e "topology_src=PATH_TO_TOPOLOGY_FILE" inventory.yml
+```
+
+Variable | Example | Description
+--- | --- | ---
+topolgy_src* | topology/devportal.json | Path to topology json file.
+
+
+\* Required
+
+Find the files under:
+  - _inventory/
 
 ### Generate response files <a name="gen-response" />
 
@@ -131,6 +148,16 @@ $ ansible-playbook -i inventory/INVENTORY_FILE response_files.yml
 ```
 Find the response files under:
   - _reports/PLANET/response_files/response_PLANET_REGION.cfg_
+  
+### Generate response files for Dev Portal <a name="gen-response" />
+
+Generate response file per region used by the installation, upgrade and other ops tasks. Also
+create the onboarding response file:
+```
+$ ansible-playbook -i inventory/INVENTORY_FILE response_files.yml --tags devportal
+```
+Find the response files under:
+  - _reports/PLANET/response_files/responsefile.cfg_
 
 ## Apigee Edge Ops Tasks <a name="ops-tasks" />
 
@@ -156,6 +183,11 @@ Sets Cassandra, Message Processor and Postgresql memory settings.
 ```
 $ ansible-playbook -i inventory/INVENTORY_FILE prerequisites.yml
 ```
+### Install prereqs and the apigee-setup utility on Dev Portal node<a name="prereqs" />
+
+```
+$ ansible-playbook -i inventory/INVENTORY_FILE devreqs.yml
+```
 
 ### Port checking report <a name="port-check" />
 
@@ -176,6 +208,13 @@ Install Edge components in the planet:
 
 ```
 $ ansible-playbook -i inventory/INVENTORY_FILE -e "cmd=setup" setup.yml
+```
+
+### Install Edge <a name="install" />
+Install Dev Portal:
+
+```
+$ ansible-playbook -i inventory/INVENTORY_FILE  dev_portal_setup.yml
 ```
 
 ### Update Edge <a name="update" />
